@@ -1,0 +1,16 @@
+{
+  "name": "electricity-consumption-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "htmlparser2": "^3.9.2",
+    "mongoose": "^4.8.1",
+    "node-telegram-bot-api": "^0.26.0"
+  }
+}
