@@ -69,17 +69,6 @@ function login(inputData) {
   });
 };
 
-var accountid = '';
-
-var parser = new htmlparser.Parser({
-    onopentag: function(name, attribs){
-        if(name === "input" && attribs.type === "hidden" && attribs.name === 'useraccountid'){
-          //console.log('found: ' + attribs.value );
-          accountid = attribs.value;
-        }
-    }
-}, {decodeEntities: true});
-
 function retrieveAccountId( inputData ) {
 
   console.log('retrieveAccountId');
@@ -87,6 +76,14 @@ function retrieveAccountId( inputData ) {
   return new Promise((resolve, reject) => {
     //inputData.useraccountid = '224502';
     //resolve(inputData);
+    var accountid = '';
+    var parser = new htmlparser.Parser({
+        onopentag: function(name, attribs){
+            if(name === "input" && attribs.type === "hidden" && attribs.name === 'useraccountid'){
+              accountid = attribs.value;
+            }
+        }
+    }, {decodeEntities: true});
 
     var options = {
       hostname: 'cabinet.esbt.ru',
@@ -174,7 +171,7 @@ function retrievePostOptions( opts ) {
 
       res.on('data', (d) => {
         parserForm.write(d.toString());
-        parser.end();
+        parserForm.end();
         resolve(opts);
       });
     });
@@ -217,7 +214,7 @@ function postConsumption( opts ) {
     console.log(post_data);
     console.log(options);
     resolve('ok');
-/*
+
     var req = https.request(options, (res) =>{
 
       if(res.statusCode == 302 ) {
@@ -237,7 +234,7 @@ function postConsumption( opts ) {
 
     req.write(post_data);
     req.end();
-*/
+
   });
 };
 

@@ -11,6 +11,6 @@
   "dependencies": {
     "htmlparser2": "^3.9.2",
     "mongoose": "^4.8.1",
-    "node-telegram-bot-api": "^0.26.0"
+    "node-telegram-bot-api": "^0.27.0"
   }
 }
