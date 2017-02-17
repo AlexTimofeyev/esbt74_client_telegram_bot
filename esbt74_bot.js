@@ -51,7 +51,13 @@ function getConsumer( chatid ) {
           password: '',
           state: 0
         });
-        return consumer.save();
+        consumer.save()
+        .then( consumer => {
+          resolve( consumer );
+        })
+        .catch( e => {
+          reject( e );
+        });
       } else {
         resolve( consumers[0]);
       }
@@ -64,6 +70,7 @@ bot.onText(/\/login/, (msg) => {
 
   getConsumer( msg.chat.id )
   .then( consumer => {
+    console.log( 'consumer loggedin: ' + consumer.loggedin );
     if( consumer.loggedin === true ) {
       bot.sendMessage( consumer.chatId, "у меня уже есть ваши данные");
       return 0;
@@ -78,13 +85,33 @@ bot.onText(/\/login/, (msg) => {
   });
 });
 
+bot.onText(/\/delete/, (msg) => {
+  console.log('delete msg');
+  Consumer.find({chatId : msg.chat.id})
+  .then( consumers => {
+    if( consumers.length === 0 ) {
+      return bot.sendMessage( msg.chat.id, "у меня нет ваших данных" );
+    } else {
+      var consumer = consumers[ 0 ];
+      consumer.remove()
+      .then( () => {
+        return bot.sendMessage( msg.chat.id, "я удалил ваши данные");
+      });
+    }
+  })
+  .catch( e => {
+    console.log(e);
+    return 0;
+  });
+});
+
 function getUserInputAsLoginData( consumer, text ) {
   return new Promise((resolve, reject) => {
     var loginData = text.split(' ');
     if( loginData.length != 2 ) {
       reject({
         'cons' : consumer,
-        'error' : 'incorrect input: not 2 words'
+        'error' : 'необходимо ввести email и пароль для сайта esbt74.ru. Повторите ввод:'
       });
     }
     var inputData = {
